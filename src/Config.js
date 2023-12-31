@@ -5,4 +5,3 @@ export const API = {
     
 }
 
-console.log(URL);
