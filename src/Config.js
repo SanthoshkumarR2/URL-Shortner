@@ -4,3 +4,5 @@ export const API = {
     URL:'https://santhosh-url-shortner-backend.vercel.app/Url'    
     
 }
+
+console.log(URL);
