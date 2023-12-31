@@ -1,57 +1,57 @@
+//Required;
 const Url = require('../Schema/URL');
 const express = require('express');
 const path = express.Router();
-const randomstring = require('randomstring');
-require('dotenv').config();
+const randomstring = require('randomstring')
+require('dotenv').config()
 
-// Shortening Endpoint
-path.post('/Short', async (req, res) => {
-  try {
+//Conform to work;------------------------------------------------------------------------------------------------(1)
+path.post('/Short', (req, res) => {
+
+    //Long to Short 
     const urlId = randomstring.generate({ length: 12, charset: 'alphanumeric' });
-    const shortLink = `${process.env.SHORT}/Url/${urlId}`;
-    req.body.shortUrl = urlId;
-    req.body.short = shortLink;
+    let shortLink = `${process.env.SHORT}/Url/${urlId}`
+    req.body.shortUrl = urlId
+    req.body.short = shortLink
 
-    const data = new Url(req.body);
-    const result = await data.save();
-    res.status(201).send(result.short);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ Message: 'Internal Server Error' });
-  }
-});
+    //Insert Short Url data
+    let data = new Url(req.body);
+    data.save().then((result) => {
+        res.status(201).send(result.short)
+    }).catch((error) => {
+        console.log(error);
+    })
+})
 
-// Find and Return Original URL
-path.get('/:Url', async (req, res) => {
-  try {
-    const shortUrl = req.params.Url;
-    const data = await Url.findOneAndUpdate(
-      { shortUrl: shortUrl },
-      { $inc: { count: 1 } },
-      { new: true }
-    );
 
-    if (!data) {
-      return res.status(404).json({ Message: 'URL not found' });
+//Find and return original url-------------------------------------------------------------------------------------(2)
+path.get('/:Url', (req, res) => {
+    try {
+        let shortUrl = req.params.Url;
+        Url.findOne({ shortUrl: shortUrl }).then((data) => {
+            Url.findOneAndUpdate({_id:data.id }, { $inc: { count: 1 } }, { new: true },function(err,result){
+                if(err){
+                    res.send(err)
+                }
+                res.redirect(result.origUrl)
+            })
+        })
+    } catch (error) {
+        res.status(500).json({ Message: error })
     }
+})
 
-    res.redirect(data.originalUrl);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ Message: 'Internal Server Error' });
-  }
-});
+//Get all data------------------------------------------------------------------------------------------------------(3)
+path.get('/Data/All',(req,res)=>{
+    try {
+        Url.find().then((data)=>{
+            res.status(201).json(data)
+        })
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
 
-// Get all data
-path.get('/Data/All', async (req, res) => {
-  try {
-    const data = await Url.find();
-    res.status(200).json(data);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ Message: 'Internal Server Error' });
-  }
-});
 
-// Export express Router
+//Export express Router;
 module.exports = path;
