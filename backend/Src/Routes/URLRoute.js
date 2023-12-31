@@ -34,6 +34,7 @@ path.get('/:Url', (req, res) => {
                     res.send(err)
                 }
                 res.redirect(result.origUrl)
+                console.log(res)
             })
         })
     } catch (error) {
