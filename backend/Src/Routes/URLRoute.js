@@ -40,8 +40,8 @@ path.get('/:Url', async (req, res) => {
       return res.status(404).json({ Message: 'URL not found' });
     }
 
-    res.redirect(data.short);
-    console.log('Redirected to:', data.short);
+    res.redirect(data.origUrl);
+    console.log('Redirected to:', data.origUrl);
   } catch (error) {
     console.error(error);
     res.status(500).json({ Message: 'Internal Server Error' });
