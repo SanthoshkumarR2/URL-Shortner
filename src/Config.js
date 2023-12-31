@@ -1,6 +1,7 @@
 export const API = {
-
-    User:'https://santhosh-url-shortner.vercel.app/User.js',
-    URL:'https://santhosh-url-shortner.vercel.app/Url.js'
+    // User:'https://url-short-backend.vercel.app/User',
+    // URL:'https://url-short-backend.vercel.app/Url'
+    User:'http://localhost:3001/User',
+    URL:'http://localhost:3001/Url'
 //      
 }
