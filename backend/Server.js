@@ -9,7 +9,7 @@ const cors = require('cors');
 //Middleware;
 App.use(express.json());
 App.use(express.urlencoded({ extended: true }));
-App.use(cors({ origin: "*"}))
+App.use(cors({ origin: "https://santhosh-url-shortner.vercel.app"}))
 
 
 //User Routes;
